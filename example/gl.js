@@ -27,9 +27,19 @@ function members (name) {
     }
   })
   mousewheel(function (dx, dy) {
-    k0 *= 1-dy/1000
-    x0 *= 1-dy/1000
-    y0 *= 1-dy/1000
+    zoom(dy/1000)
+  })
+  function zoom (x) {
+    k0 *= 1-x
+    x0 *= 1-x
+    y0 *= 1-x
+  }
+  window.addEventListener('keydown', function (ev) {
+    if (ev.key === '-') {
+      zoom(0.3)
+    } else if (ev.key === '+' || ev.key === '=') {
+      zoom(-0.3)
+    }
   })
   return m
 }
