@@ -1,48 +1,13 @@
 var regl = require('regl')()
-var camera = require('regl-camera')(regl, { distance: 10 })
 var glsl = require('glslify')
-var mousewheel = require('mouse-wheel')
-var mousechange = require('mouse-change')
+var camera = require('../')(location.hash.replace(/^#/,'') || `
+  +proj=tmerc +lat_0=18.83333333333333 +lon_0=-155.5 +ellps=GRS80 +units=m
+  +k_0=0.0000019268500651226404 +x_0=0.35589838645697514
+  +y_0=-0.34185734540971613`.trim())
 
-var proj = require('glsl-proj4')
-var p = proj(`+proj=tmerc +lat_0=18.83333333333333 +lon_0=-155.5
-  +k_0=6e-6 +x_0=0.01 +y_0=-0.3 +ellps=GRS80 +units=m +no_defs`)
-
-function members (name) {
-  var m = p.members(name)
-  var x0 = m[name+'.x0']
-  var y0 = m[name+'.y0']
-  var k0 = m[name+'.k0']
-  m[name+'.x0'] = function () { return x0 }
-  m[name+'.y0'] = function () { return y0 }
-  m[name+'.k0'] = function () { return k0 }
-  var prevx = 0, prevy = 0
-  mousechange(function (buttons, x, y) {
-    var dx = x - prevx, dy = y - prevy
-    var m = Math.max(window.innerWidth, window.innerHeight)
-    prevx = x, prevy = y
-    if (buttons & 1) {
-      x0 += dx / m * 2
-      y0 -= dy / m * 2
-    }
-  })
-  mousewheel(function (dx, dy) {
-    zoom(dy/1000)
-  })
-  function zoom (x) {
-    k0 *= 1-x
-    x0 *= 1-x
-    y0 *= 1-x
-  }
-  window.addEventListener('keydown', function (ev) {
-    if (ev.key === '-') {
-      zoom(0.3)
-    } else if (ev.key === '+' || ev.key === '=') {
-      zoom(-0.3)
-    }
-  })
-  return m
-}
+camera.on('update', function () {
+  location.hash = camera.string()
+})
 
 var mesh = require('./hawaii.json')
 var draw = regl({
@@ -67,13 +32,14 @@ var draw = regl({
   attributes: {
     position: mesh.positions
   },
-  uniforms: Object.assign(members('proj'), {
+  uniforms: Object.assign(camera.members('proj'), {
     aspect: function (context) {
       return context.viewportWidth / context.viewportHeight
     }
   }),
   elements: mesh.cells
 })
+
 regl.frame(function () {
   regl.clear({ color: [1,1,1,1], depth: true })
   draw()
