@@ -1,0 +1,29 @@
+{
+  "name": "glsl-proj4-camera",
+  "description": "use proj4 strings to map lonlat geometry to screen coordinates in a shader",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "glsl-proj4": "^1.3.0",
+    "mouse-change": "^1.4.0",
+    "mouse-wheel": "^1.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/substack/glsl-proj4-camera.git"
+  },
+  "keywords": [
+    "glslify",
+    "glsl",
+    "proj4",
+    "webgl",
+    "geo",
+    "gis"
+  ],
+  "author": "substack",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/substack/glsl-proj4-camera/issues"
+  },
+  "homepage": "https://github.com/substack/glsl-proj4-camera#readme"
+}

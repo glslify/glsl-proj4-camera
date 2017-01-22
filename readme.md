@@ -2,6 +2,9 @@
 
 use proj4 strings to map lonlat geometry to screen coordinates in a shader
 
+This module sets up listeners for mouse events to update the member uniforms
+given in a proj4 string.
+
 # example
 
 [view this demo](https://substack.neocities.org/proj4camera.html)
