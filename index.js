@@ -15,7 +15,7 @@ module.exports = function (str) {
     ref[key.replace(/^\./,'')] = ref[key]
     delete ref[key]
   })
-  var prevx = 0, prevy = 0
+  var prevx = -1, prevy = -1
   ev.string = function () {
     str = str.replace(/\bx_0=\S+/, 'x_0='+ref.x0)
     str = str.replace(/\by_0=\S+/, 'y_0='+ref.y0)
@@ -32,6 +32,10 @@ module.exports = function (str) {
   mousechange(function (buttons, x, y) {
     var dx = x - prevx, dy = y - prevy
     var m = Math.max(window.innerWidth, window.innerHeight)
+    if (prevx < 0 || prevy < 0) {
+      prevx = x, prevy = y
+      return
+    }
     prevx = x, prevy = y
     if (buttons & 1) {
       ref.x0 += dx / m * 2
